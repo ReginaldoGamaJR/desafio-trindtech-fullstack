@@ -5,9 +5,10 @@ Esse arquivo, eu criei com a intenção dele conectar com o banco de dados do Po
 import Sequelize from 'sequelize';
 import databaseConfig from './config/bancoDeDados.js';
 import Curso from './app/modelos/Curso.js';
+import Aluno from './app/modelos/Aluno.js';
 
 //Aqui vou usar um array para botar os meus modelos, no caso serão três, o Curso, os Alunos e o Aluno_Curso, mesma quantidade que as tabelas do SGBD
-const models = [Curso]; 
+const models = [Curso, Aluno]; 
 
 class Connection {
   /* Agora na classe assim que iniciarmos ela, o constructor já chama o método init que foi definido mais embaixo, que usa
