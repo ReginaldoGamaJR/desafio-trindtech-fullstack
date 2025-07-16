@@ -26,5 +26,7 @@ rotas.post('/alunos', AlunoControlador.store);
 
 rotas.get('/alunos', AlunoControlador.index);
 
+rotas.put('/alunos/:id', AlunoControlador.update);
+
 
 export default rotas;

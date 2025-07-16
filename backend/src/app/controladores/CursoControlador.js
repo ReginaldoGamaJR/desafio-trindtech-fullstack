@@ -33,13 +33,8 @@ class CursoControlador {
       //Se o curso não for encontrado, se torna True, e aí vou retornar o error 404(Não encontrado), com uma mensagem de curso não registrado
       return res.status(404).json({ error: 'Curso não registrado.'});
     }
-
-    const { nome, descricao } = req.body;
     //Agora vou utilizar um método do sequelize que vai updatar o curso com o novo nome e descriçãp
-    const cursoAtulizado = await curso.update({
-      nome,
-      descricao
-    });
+    const cursoAtulizado = await curso.update(req.body);
     //Retornar o curso agora com todas as informações atualizadas
     return res.json(cursoAtulizado);
   }
