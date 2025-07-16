@@ -24,5 +24,7 @@ rotas.put('/cursos/:id', CursoControlador.delete);
 
 rotas.post('/alunos', AlunoControlador.store);
 
+rotas.get('/alunos', AlunoControlador.index);
+
 
 export default rotas;

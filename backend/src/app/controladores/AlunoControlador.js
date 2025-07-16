@@ -39,6 +39,12 @@ class AlunoControlador {
         //Retorno um status 201 (Criado)
         return res.status(201).json(aluno)
     }
+    async index(req, res) {
+
+        const alunos = await Aluno.findAll();
+
+        return res.json(alunos)
+    }
 }
 //Exporto para ser usado em outras partes do código
 export default new AlunoControlador();
