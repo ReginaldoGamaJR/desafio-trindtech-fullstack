@@ -16,6 +16,9 @@ rotas.post('/cursos', CursoControlador.store);
 
 rotas.get('/cursos', CursoControlador.index);
 
+rotas.put('/cursos/:id', CursoControlador.update);
+
+rotas.put('/cursos/:id', CursoControlador.delete);
 
 
 export default rotas;
