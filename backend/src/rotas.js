@@ -20,13 +20,15 @@ rotas.get('/cursos', CursoControlador.index);
 
 rotas.put('/cursos/:id', CursoControlador.update);
 
-rotas.put('/cursos/:id', CursoControlador.delete);
+rotas.delete('/cursos/:id', CursoControlador.delete);
 
 rotas.post('/alunos', AlunoControlador.store);
 
 rotas.get('/alunos', AlunoControlador.index);
 
 rotas.put('/alunos/:id', AlunoControlador.update);
+
+rotas.delete('/alunos/:id', AlunoControlador.delete);
 
 
 export default rotas;

@@ -49,7 +49,7 @@ class CursoControlador {
       return res.status(404).json({ error: 'Curso não registrado'});
     }
     //Utilizo um método do sequelize o Destroy, para apagar o curso
-    cursoDeletado = await curso.destroy();
+    const cursoDeletado = await curso.destroy();
     //Retorno o status 204( No content )
     return res.status(204).send();
   }

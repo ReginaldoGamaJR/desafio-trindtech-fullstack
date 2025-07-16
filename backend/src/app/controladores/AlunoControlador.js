@@ -64,7 +64,20 @@ class AlunoControlador {
         const alunoAtualizado = await aluno.update(req.body)
 
         return res.json(alunoAtualizado)
+    }
+    //Criei o delete
+    async delete(req, res) {
+        const { id } = req.params;
 
+        const aluno = await Aluno.findByPk(id);
+        //Tratamento do caso de aluno não existir
+        if(!aluno) {
+            return res.status(404).json({ error: 'Aluno não registrado'})
+        }
+        //Deletando o aluno
+        const alunoDeletado = await aluno.destroy()
+        //Retornando um no content
+        return res.status(204).send()   
     }
 }
 //Exporto para ser usado em outras partes do código
