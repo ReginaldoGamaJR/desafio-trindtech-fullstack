@@ -33,4 +33,4 @@ class Aluno extends Model {
 }
 //Exportando Aluno para que seja usado em outras partes do código
 
-export default Aluno 
+export default Aluno;
