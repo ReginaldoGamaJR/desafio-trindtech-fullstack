@@ -36,5 +36,7 @@ rotas.post('/cursos/:cursoId/alunos', AlunoCursoControlador.store);
 
 rotas.get('/alunos/:alunoId/cursos', AlunoCursoControlador.index);
 
+rotas.put('/cursos/:cursoId/alunos/:alunoId', AlunoCursoControlador.update);
+
 
 export default rotas;

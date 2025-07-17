@@ -45,6 +45,7 @@ class AlunoCursoControlador {
       });
     } 
   }
+  //Agora o GET
   async index(req, res) {
     try {
       //Primeiro vou pegar o ID do aluno em questão que quero ver os cursos
@@ -80,6 +81,32 @@ class AlunoCursoControlador {
       return res.status(500).json({ error: 'Falha ao encontrar as matrículas.'})
     }
     
+  }
+
+  //Agora o UPDATE
+
+  async update(req, res) {
+
+    const {alunoId, cursoId} = req.params;
+
+    const { status } = req.body;
+    //Vou buscar a matrícula em questão utilizando o id do aluno e do curso, vou achar uma só
+    const matricula = await AlunoCurso.findOne({
+      where: {
+        aluno_id: alunoId,
+        curso_id: cursoId
+      },
+    });
+    //Validar se a matrícula existe
+
+    if (!matricula) {
+      return res.status(404).json({ error: 'Matrícula não encontrada.'})
+    };
+    //Vou atualizar a matrícula agora
+
+    await matricula.update({ status });
+
+    return res.json(matricula)
   }
 }
 export default new AlunoCursoControlador();
