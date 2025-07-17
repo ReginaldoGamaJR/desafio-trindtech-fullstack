@@ -14,7 +14,7 @@ class AlunoCurso extends Model {
           type: Sequelize.INTEGER,
           primaryKey: true,
         },
-        //Também criei o atributo status, ele é do tipo enumeração e só tem 3 estados possívels
+        //Também criei o atributo status, ele é do tipo enumeração e só tem 4 estados possívels
         //Por default, sempre que criado uma matrícula com um aluno, ele ficará em andamento
         status: Sequelize.ENUM('em_andamento', 'concluido', 'trancado', 'encerrado'),
       },

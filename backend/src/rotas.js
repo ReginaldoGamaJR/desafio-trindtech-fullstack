@@ -38,5 +38,6 @@ rotas.get('/alunos/:alunoId/cursos', AlunoCursoControlador.index);
 
 rotas.put('/cursos/:cursoId/alunos/:alunoId', AlunoCursoControlador.update);
 
+rotas.delete('/cursos/:cursoId/alunos/:alunoId', AlunoCursoControlador.delete);
 
 export default rotas;

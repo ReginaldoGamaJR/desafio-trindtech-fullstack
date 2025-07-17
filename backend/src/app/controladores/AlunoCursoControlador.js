@@ -108,5 +108,28 @@ class AlunoCursoControlador {
 
     return res.json(matricula)
   }
+
+  //Por último o DELETE
+
+  async delete(req, res) {
+    //Pegando os IDs
+    const { alunoId, cursoId } = req.params;
+    //Procurando a matrícula 
+    const matricula = await AlunoCurso.findOne({
+      
+      where: {
+        aluno_id: alunoId,
+        curso_id: cursoId,
+      },
+    });
+    //Agora, vou validar para ver se a matrícula existe
+    if (!matricula) {
+      return res.status(404).json({ error: 'Matrícula não encontrada.'})
+    }
+    //Se a matrícula existe, então vamos deletá-la
+    await matricula.destroy();
+    //Retornar o status 204 (Content not found) e de fato não deve ser encontrado se for deletado
+    return res.status(204).send();
+  }
 }
 export default new AlunoCursoControlador();
