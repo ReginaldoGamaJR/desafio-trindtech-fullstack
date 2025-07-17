@@ -2,6 +2,8 @@ import { Router } from 'express';
 
 import CursoControlador from './app/controladores/CursoControlador.js';
 
+import AlunoCursoControlador from './app/controladores/AlunoCursoControlador.js';
+
 import AlunoControlador from './app/controladores/AlunoControlador.js';
 
 const rotas = new Router();
@@ -29,6 +31,8 @@ rotas.get('/alunos', AlunoControlador.index);
 rotas.put('/alunos/:id', AlunoControlador.update);
 
 rotas.delete('/alunos/:id', AlunoControlador.delete);
+
+rotas.post('/cursos/:cursoId/alunos', AlunoCursoControlador.store);
 
 
 export default rotas;

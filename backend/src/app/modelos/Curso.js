@@ -1,35 +1,39 @@
-/*
-Os modelos são uma forma de mapear a tabela criada no PostgreSQL, essa no caso é o modelo que se refere a Cursos
-todo curso na tabela tem 5 atributos, 
-os dois atributos aqui são o nome, e a descrição
-*/
 import { Model, Sequelize } from 'sequelize';
-//Ao criar o curso extends model, significa que a class Curso herdou todos os métodos que a class Model do sequelize tem
-//E um desses poderes é o Create que utilizei no CursoControlador
-
+//Criação do modelo Curso
+/*
+A criação do Curso, utilizando o extends Model, significa que a nova classe Curso vai herdar
+todos os métodos de Model, ou seja, o Create, o FindByPK, o Destroy() e muitos outros
+*/
 class Curso extends Model {
-  /*
-    O método init é chamado pela conexão do Sequelize para registrar este modelo
-    As colunas id, created_at e updated_at são gerenciadas
-    automaticamente pelo Sequelize e pelo banco de dados, por isso não são
-    definidas aqui.
-   */
   static init(sequelize) {
     super.init(
       {
-        //Agora vou definir as colunas da tabela
+        //Aqui eu traduzo os atributos da table do SGBD PostgreSQL para sequelize
         nome: Sequelize.STRING,
         descricao: Sequelize.TEXT,
-        // Aqui eu só simplesmente traduzi os tipos abstratos do sequelize para os primitivos do SGBD
+        
       },
-      {
-        sequelize,
-        modelName: 'Curso', 
-        tableName: 'cursos', 
-        //Aqui eu interligo o nome do modelo que é Curso com a sua devida tabela que é cursos, criada no PostgreSQL
-      }
+      { 
+        sequelize, 
+        tableName: 'cursos',
+        modelName: 'Curso',
+       } 
     );
+    return this;
+  }
+
+  //Agora eu só vou realmente criar o associate, para fazer a relação entre as duas tabelas
+  static associate(models) {
+    //É uma relação de N para N, ou seja muitos para muitos, 1 aluno pode ter N cursos e um curso pode ter N alunos
+    this.belongsToMany(models.Aluno, {
+      //E a foreignKey será o curso_id
+      foreignKey: 'curso_id',
+      //Essa relação vai se dar por meio da tabela aluno_curso
+      through: 'aluno_curso',
+      //Apelidada de alunos
+      as: 'alunos',
+    });
   }
 }
-//Eu agora exporto essa classe para que ela possa ser usada em outras partes do meu código 
+//Exportando as duas
 export default Curso;

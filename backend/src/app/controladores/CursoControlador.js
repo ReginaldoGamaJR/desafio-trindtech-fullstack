@@ -5,13 +5,8 @@ Aqui é onde, será feita a parte de CRUD
 class CursoControlador {
   //O metodo store, como o próprio nome já demonstra, criei na intenção de guardar, de criar novos cursos no banco de dados
   async store(req, res) {
-    //Aqui eu pego o nome e a descrição do curso, do body do req
-    const { nome, descricao } = req.body;
     //Pronto, agora vou criar o curso, utilizando o nome e a descrição que eu acabei de pegar do req
-    const curso = await Curso.create({
-      nome,
-      descricao,
-    });
+    const curso = await Curso.create(req.body);
     //Vou retornar o feedback positivo
     return res.status(201).json(curso);
   }

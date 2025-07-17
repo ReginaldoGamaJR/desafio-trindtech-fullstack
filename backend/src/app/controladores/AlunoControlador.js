@@ -3,39 +3,8 @@ import Aluno from "../modelos/Aluno.js";
 class AlunoControlador {
     //Da mesma forma de Curso, preciso de um store, para criar alunos
     async store(req, res) {
-        //Primeiro pego todos os atributos que vem na req.body
-        const { 
-            nome, 
-            email, 
-            cpf, 
-            dataNascimento, 
-            celular, 
-            cep,
-            logradouro, 
-            numero, 
-            complemento,
-            bairro, 
-            cidade, 
-            uf,
-            genero, 
-            pais } = req.body;
-        //Utilizando o método Create do Sequelize, crio um aluno com todos os atributos que peguei
-        const aluno = await Aluno.create({
-            nome, 
-            email, 
-            cpf, 
-            dataNascimento, 
-            celular, 
-            cep,
-            logradouro, 
-            numero, 
-            complemento,
-            bairro, 
-            cidade, 
-            uf,
-            genero, 
-            pais
-        });
+        //Utilizando o método Create do Sequelize, crio um aluno com todos os atributos que estão no body da req
+        const aluno = await Aluno.create(req.body);
         //Retorno um status 201 (Criado)
         return res.status(201).json(aluno)
     }
