@@ -1,6 +1,5 @@
 import Sequelize from 'sequelize';
 import databaseConfig from './config/bancoDeDados.js';
-
 import Aluno from './app/modelos/Aluno.js';
 import Curso from './app/modelos/Curso.js';
 import AlunoCurso from './app/modelos/AlunoCurso.js';
