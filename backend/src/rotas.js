@@ -6,6 +6,12 @@ import AlunoCursoControlador from './app/controladores/AlunoCursoControlador.js'
 
 import AlunoControlador from './app/controladores/AlunoControlador.js';
 
+import alunoValidador from './app/validadores/alunoValidador.js';
+
+import cursoValidador from './app/validadores/cursoValidador.js';
+
+import alunoCursoValidador from './app/validadores/alunoCursoValidador.js';
+
 const rotas = new Router();
 //Pelos meus estudos percebi que uma boa prática é botar uma rota para checar o status como um estilo de função enfática
 //Pois muitas vezes a rota não funciona, e com essa Mensagem de API funcionando posso saber onde está o erro mais facilmente
@@ -16,19 +22,19 @@ rotas.get('/', (req, res) => {
 /*
 Abaixo agora estou criando todos os caminhos necessários para a APi funcionar
 */
-rotas.post('/cursos', CursoControlador.store);
+rotas.post('/cursos',cursoValidador.store, CursoControlador.store);
 
 rotas.get('/cursos', CursoControlador.index);
 
-rotas.put('/cursos/:id', CursoControlador.update);
+rotas.put('/cursos/:id',cursoValidador.update, CursoControlador.update);
 
 rotas.delete('/cursos/:id', CursoControlador.delete);
 
-rotas.post('/alunos', AlunoControlador.store);
+rotas.post('/alunos',alunoValidador.store, AlunoControlador.store);
 
 rotas.get('/alunos', AlunoControlador.index);
 
-rotas.put('/alunos/:id', AlunoControlador.update);
+rotas.put('/alunos/:id', alunoValidador.update, AlunoControlador.update);
 
 rotas.delete('/alunos/:id', AlunoControlador.delete);
 
@@ -36,8 +42,10 @@ rotas.post('/cursos/:cursoId/alunos', AlunoCursoControlador.store);
 
 rotas.get('/alunos/:alunoId/cursos', AlunoCursoControlador.index);
 
-rotas.put('/cursos/:cursoId/alunos/:alunoId', AlunoCursoControlador.update);
+rotas.put('/cursos/:cursoId/alunos/:alunoId', alunoCursoValidador.update, AlunoCursoControlador.update);
 
 rotas.delete('/cursos/:cursoId/alunos/:alunoId', AlunoCursoControlador.delete);
+
+
 
 export default rotas;
