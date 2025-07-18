@@ -1,7 +1,7 @@
 import Aluno from '../modelos/Aluno.js';
 import Curso from '../modelos/Curso.js';
 import AlunoCurso from '../modelos/AlunoCurso.js';
-import cursocontrolador from './cursocontrolador.js';
+import cursocontrolador from './CursoControlador.js';
 
 class AlunoCursoControlador {
     //Iniciando o CRUD

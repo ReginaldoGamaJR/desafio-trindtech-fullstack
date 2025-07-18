@@ -22,6 +22,7 @@ class Usuario extends Model {
         modelName: 'Usuario',
         tableName: 'usuarios',
       }
+      
     );
     //Aqui vai ser onde a cripytografia acontece
     this.addHook('beforeSave', async (usuario) => {
@@ -30,8 +31,6 @@ class Usuario extends Model {
         usuario.password_hash = await bcrypt.hash(usuario.password, 8);
       }
     });
-    //vai retornar ela já em hash
-    return this;
   }
   //Aqui é um método sempre que for fazer login, a biblioteca tem o compare, que é capaz de comparar uma senha normal ao formato hash
   //E ver se são compatíveis
@@ -39,5 +38,7 @@ class Usuario extends Model {
     return bcrypt.compare(password, this.password_hash);
   }
 }
+
+
 
 export default Usuario;
