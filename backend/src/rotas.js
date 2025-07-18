@@ -12,6 +12,10 @@ import cursoValidador from './app/validadores/cursoValidador.js';
 
 import alunoCursoValidador from './app/validadores/alunoCursoValidador.js';
 
+import UsuarioControlador from './app/controladores/UsuarioControlador.js';
+
+import usuarioValidador from './app/validadores/usuarioValidador.js';
+
 const rotas = new Router();
 //Pelos meus estudos percebi que uma boa prática é botar uma rota para checar o status como um estilo de função enfática
 //Pois muitas vezes a rota não funciona, e com essa Mensagem de API funcionando posso saber onde está o erro mais facilmente
@@ -45,6 +49,8 @@ rotas.get('/alunos/:alunoId/cursos', AlunoCursoControlador.index);
 rotas.put('/cursos/:cursoId/alunos/:alunoId', alunoCursoValidador.update, AlunoCursoControlador.update);
 
 rotas.delete('/cursos/:cursoId/alunos/:alunoId', AlunoCursoControlador.delete);
+
+rotas.post('/usuarios', usuarioValidador.store, UsuarioControlador.store);
 
 
 

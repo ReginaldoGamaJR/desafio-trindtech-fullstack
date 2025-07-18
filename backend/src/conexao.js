@@ -3,8 +3,9 @@ import databaseConfig from './config/bancoDeDados.js';
 import Aluno from './app/modelos/Aluno.js';
 import Curso from './app/modelos/Curso.js';
 import AlunoCurso from './app/modelos/AlunoCurso.js';
+import Usuario from './app/modelos/Usuario.js';
 //Criando um array para guardar todos os meus modelos
-const models = [Aluno, Curso, AlunoCurso];
+const models = [Aluno, Curso, AlunoCurso, Usuario];
 //Vou iniciar a classe connection, será ela quem vai conectar ao SGBD PostgreSQL
 class Connection {
   constructor() {
