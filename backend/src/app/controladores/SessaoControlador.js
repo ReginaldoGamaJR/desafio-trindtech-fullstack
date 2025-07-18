@@ -12,18 +12,18 @@ class SessaoControlador {
                 email,
             },
         });
-
+        //Essa função eu defini ela no modelo de usuário
         if (!(await usuario.checkPassword(password))) {
       return res.status(401).json({ error: 'Senha incorreta.' });
     }
 
         const { id, nome} = usuario;
-
+        //Aqui é onde o token está sendo criado com um método da biblioteca JWT
         const token = jwt.sign({ id, nome, email },
              process.env.APP_SECRET,
               {expiresIn: process.env.JWT_EXPIRES_IN}
             );
-
+            //agora só vou retornar o json com tudo inclusive o token
         return res.json({
             usuario: {
                 id,

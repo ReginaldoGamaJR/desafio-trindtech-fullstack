@@ -2,7 +2,7 @@ import * as yup from 'yup';
 
 class SessaoValidador {
     async store(req, res, next) {
-        
+        //Como todo validador, não há nenhuma grande diferença
         const schema = yup.object().shape({
             email: yup.string().email('Formato de email inválido').required('O campo email é obrigatório'),
             password: yup.string().required('O campo senha é obrigatório')

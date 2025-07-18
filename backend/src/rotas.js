@@ -20,6 +20,8 @@ import SessaoControlador from './app/controladores/SessaoControlador.js';
 
 import sessaoValidador from './app/validadores/sessaoValidador.js';
 
+import authMiddleware from './app/middlewares/auth.js';
+
 const rotas = new Router();
 //Pelos meus estudos percebi que uma boa prática é botar uma rota para checar o status como um estilo de função enfática
 //Pois muitas vezes a rota não funciona, e com essa Mensagem de API funcionando posso saber onde está o erro mais facilmente
@@ -30,6 +32,19 @@ rotas.get('/', (req, res) => {
 /*
 Abaixo agora estou criando todos os caminhos necessários para a APi funcionar
 */
+
+//Aqui, esses dois não precisam que o middleware cuide deles, pois os dois qualquer pessoa pode acessar
+//É para o login ou se registrar, então para esses casos não é necessário por isso ficam na frente
+
+rotas.post('/Usuarios', usuarioValidador.store, UsuarioControlador.store);
+
+rotas.post('/sessoes', sessaoValidador.store, SessaoControlador.store);
+
+//Agora sim, depois de logar, nós vamos entrar em uma área, que só quem se registrou e tem o token pode entrar
+//Então aqui eu uso o rotas.use, ou seja, toda rotas após ele, vai ter que usar o middleware
+
+rotas.use(authMiddleware);
+
 rotas.post('/cursos',cursoValidador.store, CursoControlador.store);
 
 rotas.get('/cursos', CursoControlador.index);
@@ -53,12 +68,5 @@ rotas.get('/alunos/:alunoId/cursos', AlunoCursoControlador.index);
 rotas.put('/cursos/:cursoId/alunos/:alunoId', alunoCursoValidador.update, AlunoCursoControlador.update);
 
 rotas.delete('/cursos/:cursoId/alunos/:alunoId', AlunoCursoControlador.delete);
-
-rotas.post('/Usuarios', usuarioValidador.store, UsuarioControlador.store);
-
-rotas.post('/sessoes', sessaoValidador.store, SessaoControlador.store);
-
-
-
 
 export default rotas;
