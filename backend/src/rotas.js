@@ -68,5 +68,8 @@ rotas.get('/alunos/:alunoId/cursos', AlunoCursoControlador.index);
 rotas.put('/cursos/:cursoId/alunos/:alunoId', alunoCursoValidador.update, AlunoCursoControlador.update);
 
 rotas.delete('/cursos/:cursoId/alunos/:alunoId', AlunoCursoControlador.delete);
+//Eu adicionei essa nova rota, pois precisei adicionar mais um endpoint em alunos, pois eu não tinha como mostrar um aluno em específico 
+//Só todos eles
+rotas.get('/alunos/:id', AlunoControlador.mostrar);
 
 export default rotas;

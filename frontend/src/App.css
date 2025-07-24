@@ -16,4 +16,88 @@
 
 }
 
+.NomeAluno {
+  transition: font-weight 0.1s;
+}
 
+.NomeAluno:hover {
+  font-weight: bold;
+}
+
+.BotaoAdicionar {
+  transition: transform 0.6s;
+}
+
+.BotaoAdicionar:hover {
+  transform: scale(1.08);
+}
+
+.CursosAluno {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px; 
+ 
+}
+
+.CursosAlunoCursos, .badge-overflow {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.CursosAlunoCursos {
+  align-items: center;   
+  justify-content: center;
+  background: #f5faff;
+  color: #3da9fc;
+  border: 1px solid #b6e0fe;
+  border-radius: 16px;
+  padding: 8px 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: default;
+  transition: background 0.2s;
+ 
+}
+
+.badge-overflow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  color: #888;
+  border: 1px solid #ddd;
+  font-weight: 500;
+  height: 24px;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+.CursosTodos {
+  max-width: 400px; 
+  width: 10%; 
+
+  
+}
+
+.DataCadastro {
+  max-width: 60px; 
+  width: 15%; 
+  
+}
+
+.lixeira {
+  transition: transform 0.2s;
+}
+.lixeira:hover {
+  color: #EA394E;
+  transform: scale(1.1);
+  transform:rotate(-45deg);
+}
+
+.lupinha {
+  transition: transform 0.2s;
+}
+.lupinha:hover {
+  color: #EA394E;
+  transform: scale(1.1);
+  transform:rotate(45deg);
+}

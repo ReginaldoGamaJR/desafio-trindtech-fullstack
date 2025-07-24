@@ -11,9 +11,24 @@ class AlunoControlador {
     //Agora crio o GET
     async index(req, res) {
         //alunos será um array com todo Aluno que estiver cadastrado
-        const alunos = await Aluno.findAll();
+        //Adicionei o order, pois quando eu estava atualizando os alunos, o aluno que estava sendo atualizado ia parar no final do array
+        //Agora ele vai ficar no lugar onde estava quando foi criado
+        const alunos = await Aluno.findAll({order: [['createdAt', 'ASC']]});
         //Retorno um json que será o array
         return res.json(alunos)
+    }
+    //Criei o endpoint para mostrar os detalhes de um só aluno, para usar no fronten
+    async mostrar(req, res) {
+        try {
+        const { id } = req.params;
+        const aluno = await Aluno.findByPk(id);
+        if(!aluno) {
+            return res.status(404).json({ error: 'Aluno não registrado (Problema no mostrar)'})
+        }
+        return res.json(aluno)
+        } catch (error) {
+            return res.status(500).json({ error: 'Erro ao buscar aluno (Problema no mostrar)'})
+        }
     }
     //Criei o update
     async update(req, res) {
@@ -22,7 +37,7 @@ class AlunoControlador {
         const aluno = await Aluno.findByPk(id);
         //Tratando o caso de que o Aluno não esteja registrado
         if(!aluno) {
-            return res.status(404).json({ error: 'Aluno não registrado'})
+            return res.status(404).json({ error: 'Aluno não registrado (Problema no update)'})
         }
         /*
         Agora, quando eu havia botado todos os atributos o código ficou muito grande e meio difícil de ler
@@ -41,7 +56,7 @@ class AlunoControlador {
         const aluno = await Aluno.findByPk(id);
         //Tratamento do caso de aluno não existir
         if(!aluno) {
-            return res.status(404).json({ error: 'Aluno não registrado'})
+            return res.status(404).json({ error: 'Aluno não registrado (Problema no delete'})
         }
         //Deletando o aluno
         const alunoDeletado = await aluno.destroy()

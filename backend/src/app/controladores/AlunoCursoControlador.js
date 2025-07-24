@@ -12,16 +12,17 @@ class AlunoCursoControlador {
         //Pego o Id do aluno e do curso
       const { cursoId } = req.params;
       const { alunoId } = req.body;
+      const { data_conclusao } = req.body;
 
      //Vou tratar os erros, no caso de não existir o curso, ou não existir o aluno
       const curso = await Curso.findByPk(cursoId);
       if (!curso) {
-        return res.status(404).json({ error: 'Curso não registrado.' });
+        return res.status(404).json({ error: 'Curso não registrado. (Problema no store)' });
       }
 
       const aluno = await Aluno.findByPk(alunoId);
       if (!aluno) {
-        return res.status(404).json({ error: 'Aluno não registrado.' });
+        return res.status(404).json({ error: 'Aluno não registrado. (Problema no store)' });
       }
 
       //Agora vou efetivamente fazer a matrícula
@@ -31,6 +32,8 @@ class AlunoCursoControlador {
         aluno_id: alunoId,
         //E o atributo status, no caso já que foi matriculado, automaticamente está em andamento
         status: 'em_andamento', 
+        //Agora vou precisar passar também a data de conclusão
+        data_conclusao: data_conclusao || null,
       });
       //Retornar um status 201, foi matriculado com sucesso
       return res.status(201).json(matricula);
@@ -41,7 +44,7 @@ class AlunoCursoControlador {
       console.error('ERRO AO REALIZAR MATRÍCULA:', error);
       return res.status(500).json({
         //Retornando o motivo real do error
-        error: 'Aluno já matriculado no curso.',
+        error: 'Aluno já matriculado no curso. (Problema no store)',
       });
     } 
   }
@@ -54,11 +57,13 @@ class AlunoCursoControlador {
       const aluno = await Aluno.findByPk(alunoId);
       //Tratar o caso de o aluno não existir
       if (!aluno) {
-        return res.status(404).json({ error: 'Aluno não encontrado.'})
+        return res.status(404).json({ error: 'Aluno não encontrado. (Problema no index)'})
       }
       //Vou achar todas as matrículas do aluno em questão
       const matriculas = await AlunoCurso.findAll({
-        where: { aluno_id: alunoId },
+        //Aqui também adicionei o order, pois quando eu estava atualizando o curso, tanto o status quanto a data de conclusão
+        //Ele estava indo para o final do array, agora ele se mantém no mesmo local
+        where: { aluno_id: alunoId },order: [['createdAt', 'ASC']]
       });
       //Vou usar o map, para interar e procurar todos os IDs dos cursos
       const cursoId = matriculas.map((matricula) => matricula.curso_id);
@@ -68,17 +73,31 @@ class AlunoCursoControlador {
           id: cursoId,
         },
         //Agora vou pegar os atributos
-        attributes: ['id', 'nome', 'descricao'],
+        attributes: ['id', 'nome', 'descricao',],
+      });
+      //Eu também mudei essa parte, usando o postman
+      //Percebi que estava retornando o curso apenas, não o status e a data de conclusão
+      //Então eu criei a constante resultado, para, utilizando um map, e com o id do curso, achar a matricula
+      //E ele pegar todos os dados que preciso
+      const resultado = matriculas.map(matricula => {
+        const curso = cursos.find(c => c.id === matricula.curso_id);
+        return {
+          id: curso.id,
+          nome: curso.nome,
+          descricao: curso.descricao,
+          status: matricula.status,
+          data_conclusao: matricula.data_conclusao,
+        };
       });
 
-      return res.json(cursos)
+      return res.json(resultado)
       
     }
     //Se ele sair do try, significa que ocorreu algum erro interno do sistema, então mostrar
     catch (error) {
       console.error('Erro ao ver os cursos do aluno:', error);
       //Retornar agora um erro 500 (Erro interno do servidor)
-      return res.status(500).json({ error: 'Falha ao encontrar as matrículas.'})
+      return res.status(500).json({ error: 'Falha ao encontrar as matrículas. (Problema no index)'})
     }
     
   }
@@ -89,22 +108,22 @@ class AlunoCursoControlador {
 
     const {alunoId, cursoId} = req.params;
 
-    const { status } = req.body;
+    const { status, data_conclusao } = req.body;
     //Vou buscar a matrícula em questão utilizando o id do aluno e do curso, vou achar uma só
     const matricula = await AlunoCurso.findOne({
       where: {
         aluno_id: alunoId,
-        curso_id: cursoId
+        curso_id: cursoId,
       },
     });
     //Validar se a matrícula existe
 
     if (!matricula) {
-      return res.status(404).json({ error: 'Matrícula não encontrada.'})
+      return res.status(404).json({ error: 'Matrícula não encontrada. (Problema no update)'})
     };
     //Vou atualizar a matrícula agora
-
-    await matricula.update({ status });
+    //Também modifiquei aqui, atualizar a data de conclusão
+    await matricula.update({ status, data_conclusao });
 
     return res.json(matricula)
   }
@@ -124,7 +143,7 @@ class AlunoCursoControlador {
     });
     //Agora, vou validar para ver se a matrícula existe
     if (!matricula) {
-      return res.status(404).json({ error: 'Matrícula não encontrada.'})
+      return res.status(404).json({ error: 'Matrícula não encontrada. (Problema no delete)'})
     }
     //Se a matrícula existe, então vamos deletá-la
     await matricula.destroy();

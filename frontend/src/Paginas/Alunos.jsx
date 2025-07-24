@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { useNavigate } from "react-router-dom";
 /*
 Eu utilizei a tecnica de componentização para facilitar e ficar mais organizado
 Aqui é a parte onde cuida dos alunos, onde eu busco os alunos no meu backend e os cursos que eles estão cursando
@@ -11,6 +12,7 @@ function Alunos() {
   const [cursosPorAluno, setCursosPorAluno] = useState({});
   const [paginaAtual, setPaginaAtual] = useState(1);
   const alunosPorPagina = 10;
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchAlunos() {
@@ -98,12 +100,12 @@ function Alunos() {
             }}
           >
             {/* Aqui é o ícone de busca, esse bi bi é o que eu peguei no site de icones do bootstrap */}
-            <i className="bi bi-search" style={{ color: "#EA394E", fontSize: 22 }}></i>
+            <i className="bi bi-search lupinha" style={{ color: "#EA394E", fontSize: 22, cursor: "pointer" }} onClick={() => setBusca("")}></i>
           </span>
         </div>
         {/* Esse butão é o de adicionar, o ícone dele também peguei no site de icones do bootstrap */}
         <button
-          className="btn btn-white border border-secondary text-black d-flex align-items-center"
+          className=" bg-white text-center d-flex align-items-center justify-content-center BotaoAdicionar"
           style={{
             height: 48,
             borderRadius: 12,
@@ -112,46 +114,56 @@ function Alunos() {
             fontWeight: 500,
             gap: 8,
           }}
+          onClick={() => navigate("/adicionar-aluno")}
         >
-          <i className="bi bi-person-plus" style={{ color: "#EA394E", fontSize: 22 }}></i>
+          <i className="bi bi-person-plus " style={{ color: "#EA394E", fontSize: 22 }}></i>
           Adicionar
         </button>
       </div>
 
       {/* Aqui é efetivamente a tabela, tanto que usei o th e td e tbody*/}
       <div className="card p-3">
-        <table className="table align-middle h-30">
-          <thead>
-            <tr>
-              <th>Data de cadastro</th>
-              <th>Nome</th>
-              <th>Estado</th>
-              <th>Cursos</th>
-            </tr>
-          </thead>
+        <div className="table-responsive">
+          <table className="table align-middle h-30">
+            <thead>
+              <tr>
+                <th className="">Data de cadastro</th>
+                <th>Nome</th>
+                <th>Estado</th>
+                <th>Cursos</th>
+              </tr>
+            </thead>
           <tbody>
             {/* Agora vou utilizar um map, para pegar de cada aluno da página, o atributo que eu quero, no caso quero o 
             createdAt, nome, uf para isso estou usando o aluno.id como chave, e também na data, tive que utilizar toLocaleDateString pt-br para formatar*/}
             {alunosPagina.map(aluno => (
               <tr key={aluno.id}>
-                <td>{new Date(aluno.createdAt).toLocaleDateString('pt-BR')}</td>
-                <td>{aluno.nome}</td>
+                <td className="DataCadastro">{new Date(aluno.createdAt).toLocaleDateString('pt-BR')}</td>
+                <td style={{cursor: "pointer"}} className="NomeAluno" onClick={() => navigate(`/alunos/${aluno.id}`) }>{aluno.nome}</td>
                 <td>{aluno.uf}</td>
-                <td>
-                {(cursosPorAluno[aluno.id] || []).map(curso => (
-                    <span key={curso.id} className="badge bg-muted text-info border border-info me-1">{curso.nome}</span>
+                <td className="CursosTodos">
+                  <div className="CursosAluno">
+                {(cursosPorAluno[aluno.id] || []).slice(0, 1).map(curso => (
+                    <span key={curso.id} className="badge bg-muted text-info border border-info me-1 CursosAlunoCursos text-center">{curso.nome}</span>
                   ))}
+                {(cursosPorAluno[aluno.id] || []).length > 1 && (
+                <span className="CursosAlunoCursos badge-overflow">
+                  +{(cursosPorAluno[aluno.id] || []).length - 1}
+                </span>
+                )}
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        </div>
       </div>
       {/* Aqui é a paginação, onde eu vou mostrar as páginas, e também os botões de anterior e próximo */}
       <nav>
         <ul className="pagination justify-content-center">
           <li className={`page-item ${paginaAtual === 1 ? "disabled" : ""}`}>
-            <button className="page-link bg-white text-secondary" onClick={() => setPaginaAtual(paginaAtual - 1)}> <i className="bi bi-arrow-left"></i> Anterior</button>
+            <button className="page-link bg-white text-secondary" onClick={() => setPaginaAtual(paginaAtual - 1)}> <i className="bi bi-arrow-left-circle"></i> Anterior</button>
           </li>
           {Array.from({ length: totalPaginas }, (_, i) => (
             <li key={i} className={`page-item ${paginaAtual === i + 1 ? "active" : ""}`}>
@@ -159,7 +171,7 @@ function Alunos() {
             </li>
           ))}
           <li className={`page-item  ${paginaAtual === totalPaginas ? "disabled" : ""}`}>
-            <button className="page-link bg-white text-secondary" onClick={() => setPaginaAtual(paginaAtual + 1)}>Próximo <i className="bi bi-arrow-right"> </i></button>
+            <button className="page-link bg-white text-secondary" onClick={() => setPaginaAtual(paginaAtual + 1)}>Próximo <i className="bi bi-arrow-right-circle"> </i></button>
           </li>
         </ul>
       </nav>

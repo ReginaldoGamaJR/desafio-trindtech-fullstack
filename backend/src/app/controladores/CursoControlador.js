@@ -26,7 +26,7 @@ class CursoControlador {
     //Tenho que tratar o caso de que o curso em questão não exista no meu Banco de dados
     if(!curso) {
       //Se o curso não for encontrado, se torna True, e aí vou retornar o error 404(Não encontrado), com uma mensagem de curso não registrado
-      return res.status(404).json({ error: 'Curso não registrado.'});
+      return res.status(404).json({ error: 'Curso não registrado. (Problema no update)'});
     }
     //Agora vou utilizar um método do sequelize que vai updatar o curso com o novo nome e descriçãp
     const cursoAtulizado = await curso.update(req.body);
@@ -41,7 +41,7 @@ class CursoControlador {
     const curso = await Curso.findByPk(id);
     //Tratando novamente o caso onde o curso pode não existir
     if(!curso) {
-      return res.status(404).json({ error: 'Curso não registrado'});
+      return res.status(404).json({ error: 'Curso não registrado. (Problema no delete)'});
     }
     //Utilizo um método do sequelize o Destroy, para apagar o curso
     const cursoDeletado = await curso.destroy();

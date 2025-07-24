@@ -14,6 +14,11 @@ class AlunoCurso extends Model {
           type: Sequelize.INTEGER,
           primaryKey: true,
         },
+        //Precisei adicionar um novo atributo, dataConclusão, para guardar a data de conclusão do curso
+        data_conclusao: {
+          type: Sequelize.DATEONLY, 
+          allowNull: true,
+        },
         //Também criei o atributo status, ele é do tipo enumeração e só tem 4 estados possívels
         //Por default, sempre que criado uma matrícula com um aluno, ele ficará em andamento
         status: Sequelize.ENUM('em_andamento', 'concluido', 'trancado', 'encerrado'),
