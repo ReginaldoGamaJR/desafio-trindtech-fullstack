@@ -1,0 +1,12 @@
+services:
+  backend:
+    image: backend
+    build:
+      context: backend
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: development
+    ports:
+      - 3333:3333
+      - 9229:9229
+    command: ["npm", "run", "dev"]

@@ -5,6 +5,7 @@ import Login from "./Paginas/Login.jsx";
 import BarraDeNavegacao from "./Componentes/Navegacao.jsx";
 import AlunoDetalhes from "./Paginas/AlunoDetalhes.jsx";
 import AdicionarAluno from "./Paginas/AdicionarAluno.jsx";
+import Footer from "./Componentes/Footer.jsx";
 //Aqui é o esqueleto principal do gerenciador
 function App() {
 //Eu vou usar o router, para fazer a navegação
@@ -22,6 +23,7 @@ function App() {
         {/*Essa rota de asterisco é a rota default*/}
         <Route path="*" element={<Login />} /> 
       </Routes>
+      <Footer />
     </Router>
   );
 }

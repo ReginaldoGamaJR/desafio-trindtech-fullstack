@@ -5,9 +5,10 @@
   text-align: center;
 }
 
+
 /*Agora eu estilizei a minha tabela, usando o tr, td e th*/
 .table tr {
-  height: 56px;
+  height: 70px;
 }
 
 .table td, .table th {
@@ -100,4 +101,28 @@
   color: #EA394E;
   transform: scale(1.1);
   transform:rotate(45deg);
+}
+
+.olhinho {
+  transition: transform 0.2s;
+}
+
+.olhinho:hover {
+  color: #EA394E;
+}
+
+.quadradoDoLogin {
+  background-color: #f5f5f5;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
+.setasCimaBaixo {
+  transition: transform 0.2s;
+}
+
+.setasCimaBaixo:hover {
+  color: #EA394E;
+  transform: scale(1.1);
 }

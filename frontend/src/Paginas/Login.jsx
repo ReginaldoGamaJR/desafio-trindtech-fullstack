@@ -7,6 +7,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+  //Refatorando, achei melhor existir a função de mostrar a senha, pois assim eu posso usar o bi-eye-slash e o bi-eye
+  const [mostrarSenha, setMostrarSenha] = useState(false);
   const navigate = useNavigate();
   //HandleLogin é a função que vai lidar com o login, assim como o nome já diz
   const handleLogin = async (e) => {
@@ -31,20 +33,24 @@ function Login() {
 
   return (
     //Aqui, assim como na de alunos é o que vai aparecer na tela
-    <div className="container d-flex flex-column align-items-center justify-content-center" style={{ minHeight: "80vh" }}>
+    <div className="container d-flex flex-column align-items-center justify-content-center " style={{ minHeight: "80vh" }}>
       {/* Aqui é o card, onde vai aparecer o login */}
-      <div className="card p-4" style={{ maxWidth: 400, width: "100%" }}>
+      <div className="card p-4 quadradoDoLogin" style={{ maxWidth: 400, width: "100%" }}>
         <h2 className="mb-4 text-center">Login</h2>
         {erro && <div className="alert alert-danger">{erro}</div>}
         {/* OnSubmit significa que quando clicar para entrar, vai chamar a função handlelogin*/}
         <form onSubmit={handleLogin}>
           <div className="mb-3">
             <label className="form-label">E-mail</label>
-            <input type="email" className="form-control" value={email} onChange={e => setEmail(e.target.value)} required />
+            <input type="email" className="form-control text-center" value={email} onChange={e => setEmail(e.target.value)} required />
           </div>
           <div className="mb-3">
             <label className="form-label">Senha</label>
-            <input type="password" className="form-control" value={senha} onChange={e => setSenha(e.target.value)} required />
+            {/* Aqui vou usar o type para fazer a pergunta, mostrarsenha é true? se for então o type vai ser text, se não então o type vai ser password */}
+            {/* Quando é text nós vemos, se for password nós não vemos*/}
+            <input type={mostrarSenha ? "text" : "password"} className="form-control text-center" value={senha} onChange={e => setSenha(e.target.value)}  required />
+            {/* Aqui eu vou usar o i para mostrar o bi-eye-slash ou o bi-eye, e vou usar o onClick para mudar o estado de mostrarSenha */}
+            <i className={`bi ${mostrarSenha ? "bi-eye-slash" : "bi-eye"} olhinho`} onClick={() => setMostrarSenha(!mostrarSenha)} style={{cursor: "pointer"}}></i>
           </div>
           <button type="submit" className="btn btn-primary w-100">Entrar</button>
         </form>

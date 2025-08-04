@@ -3,11 +3,14 @@ import Aluno from "../modelos/Aluno.js";
 class AlunoControlador {
     //Da mesma forma de Curso, preciso de um store, para criar alunos
     async store(req, res) {
-        //Utilizando o método Create do Sequelize, crio um aluno com todos os atributos que estão no body da req
+      try {  //Utilizando o método Create do Sequelize, crio um aluno com todos os atributos que estão no body da req
         const aluno = await Aluno.create(req.body);
         //Retorno um status 201 (Criado)
         return res.status(201).json(aluno)
+    } catch (error) {
+        return res.status(500).json({ error: 'Erro ao criar aluno (Problema no store)', details: error.message})
     }
+  }
     //Agora crio o GET
     async index(req, res) {
         //alunos será um array com todo Aluno que estiver cadastrado

@@ -13,7 +13,7 @@ function Alunos() {
   const [paginaAtual, setPaginaAtual] = useState(1);
   const alunosPorPagina = 10;
   const navigate = useNavigate();
-
+  const [ordenarData, setOrdenarData] = useState(false);  
   useEffect(() => {
     async function fetchAlunos() {
       //Aqui é onde eu vou buscar os alunos no meu backend
@@ -50,8 +50,16 @@ function Alunos() {
     //o useEffect vai ser chamado só uma vez, quando a página for carregada
     fetchAlunos();
   }, []);
+  //Aqui eu só vou ordernar eles mesmo, preparar essa função para funcionar no onclick das setinhas
+    const alunosOrdenados = [...alunos].sort((a, b) => {
+    if (ordenarData) {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    } else {
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    }
+  });
   //Aluno filtrados, vão ser os alunos que eu vou mostrar na tabela
-  const alunosFiltrados = alunos.filter(aluno =>
+  const alunosFiltrados = alunosOrdenados.filter(aluno =>
     aluno.nome.toLowerCase().includes(busca.toLowerCase())
   );
   //esse ultimo aluno, é o ultimo aluno que eu vou mostar na tabela dependendo da pagina que eu estou
@@ -73,7 +81,7 @@ function Alunos() {
           <input
           //Aqui é a barra de buscar por alunos
             type="text"
-            className="form-control"
+            className="form-control "
             //No placeHolder, é onde fica a frase quando a gente não escreve nada
             placeholder="Buscar por aluno"
             //Value é o valor que vai aparecer quando terminarmos de buscar
@@ -122,14 +130,14 @@ function Alunos() {
       </div>
 
       {/* Aqui é efetivamente a tabela, tanto que usei o th e td e tbody*/}
-      <div className="card p-3">
+      <div className="card p-3 border border-white padding-0 ">
         <div className="table-responsive">
-          <table className="table align-middle h-30">
+          <table className="table align-middle h-30 borderless">
             <thead>
               <tr>
-                <th className="">Data de cadastro</th>
-                <th>Nome</th>
-                <th>Estado</th>
+                <th className="">Data de cadastro <i className="bi bi-arrow-down-up setasCimaBaixo" style={{cursor: "pointer"}} onClick={() => setOrdenarData(!ordenarData)}></i></th>
+                <th className="text-start tabelaNome w-25">Nome</th>
+                <th className="">Estado</th>
                 <th>Cursos</th>
               </tr>
             </thead>
@@ -139,16 +147,16 @@ function Alunos() {
             {alunosPagina.map(aluno => (
               <tr key={aluno.id}>
                 <td className="DataCadastro">{new Date(aluno.createdAt).toLocaleDateString('pt-BR')}</td>
-                <td style={{cursor: "pointer"}} className="NomeAluno" onClick={() => navigate(`/alunos/${aluno.id}`) }>{aluno.nome}</td>
-                <td>{aluno.uf}</td>
+                <td style={{cursor: "pointer"}} className="NomeAluno text-start " onClick={() => navigate(`/alunos/${aluno.id}`) }>{aluno.nome}</td>
+                <td className="text-center">{aluno.uf}</td>
                 <td className="CursosTodos">
                   <div className="CursosAluno">
-                {(cursosPorAluno[aluno.id] || []).slice(0, 1).map(curso => (
+                {(cursosPorAluno[aluno.id] || []).slice(0, 2).map(curso => (
                     <span key={curso.id} className="badge bg-muted text-info border border-info me-1 CursosAlunoCursos text-center">{curso.nome}</span>
                   ))}
-                {(cursosPorAluno[aluno.id] || []).length > 1 && (
+                {(cursosPorAluno[aluno.id] || []).length > 2 && (
                 <span className="CursosAlunoCursos badge-overflow">
-                  +{(cursosPorAluno[aluno.id] || []).length - 1}
+                  +{(cursosPorAluno[aluno.id] || []).length - 2}
                 </span>
                 )}
                   </div>
@@ -160,10 +168,10 @@ function Alunos() {
         </div>
       </div>
       {/* Aqui é a paginação, onde eu vou mostrar as páginas, e também os botões de anterior e próximo */}
-      <nav>
+      <nav >
         <ul className="pagination justify-content-center">
           <li className={`page-item ${paginaAtual === 1 ? "disabled" : ""}`}>
-            <button className="page-link bg-white text-secondary" onClick={() => setPaginaAtual(paginaAtual - 1)}> <i className="bi bi-arrow-left-circle"></i> Anterior</button>
+            <button className="page-link bg-white text-secondary borderless" onClick={() => setPaginaAtual(paginaAtual - 1)}> <i className="bi bi-arrow-left"></i> Anterior</button>
           </li>
           {Array.from({ length: totalPaginas }, (_, i) => (
             <li key={i} className={`page-item ${paginaAtual === i + 1 ? "active" : ""}`}>
@@ -171,7 +179,7 @@ function Alunos() {
             </li>
           ))}
           <li className={`page-item  ${paginaAtual === totalPaginas ? "disabled" : ""}`}>
-            <button className="page-link bg-white text-secondary" onClick={() => setPaginaAtual(paginaAtual + 1)}>Próximo <i className="bi bi-arrow-right-circle"> </i></button>
+            <button className="page-link bg-white text-secondary " onClick={() => setPaginaAtual(paginaAtual + 1)}>Próximo <i className="bi bi-arrow-right"> </i></button>
           </li>
         </ul>
       </nav>
