@@ -1,4 +1,5 @@
 import Aluno from "../modelos/Aluno.js";
+import { Op } from "sequelize";
 //Agora vou criar o Controlador para o Model de Alunos
 class AlunoControlador {
     //Da mesma forma de Curso, preciso de um store, para criar alunos
@@ -16,9 +17,43 @@ class AlunoControlador {
         //alunos será um array com todo Aluno que estiver cadastrado
         //Adicionei o order, pois quando eu estava atualizando os alunos, o aluno que estava sendo atualizado ia parar no final do array
         //Agora ele vai ficar no lugar onde estava quando foi criado
-        const alunos = await Aluno.findAll({order: [['createdAt', 'ASC']]});
-        //Retorno um json que será o array
-        return res.json(alunos)
+        //Agora eu vou implementar a paginação de resultados, pois se na minha aplicação houvessem muitos alunos, eu não poderia mostrar todos eles de uma vez
+        const { pagina = 1, busca = "" } = req.query;
+        //Quando adicionei a paginação percebi que a busca havia parado de funcionar
+        //Então eu vou criar uma cláusula de busca
+        //A cláusula de busca vai ser o nome do aluno, e o iLike é para que a busca seja case insensitive
+        const whereClause = busca ? {
+            nome: {
+                [Op.iLike]: `%${busca}%`
+            }
+        } : {};
+        //Depois eu vou buscar os alunos com a cláusula de busca
+        const alunos = await Aluno.findAll({
+            where: whereClause,
+            order: [['createdAt', 'ASC']], 
+            limit: 10, 
+            offset: (pagina - 1) * 10
+        });
+        //Primeiro pego o total de alunos (com filtro de busca)
+        const totalAlunos = await Aluno.count({ where: whereClause });
+        //Depois calculo o total de páginas
+        const totalPaginas = Math.ceil(totalAlunos / 10);
+        //Depois pego a página atual
+        const paginaAtual = parseInt(pagina);
+        //Depois a próxima
+        const proximaPagina = paginaAtual < totalPaginas ? paginaAtual + 1 : null;
+        //Depois a anterior
+        const paginaAnterior = paginaAtual > 1 ? paginaAtual - 1 : null;
+        //Depois crio um objeto com as informações
+        const meta = {
+            totalAlunos,
+            totalPaginas,
+            paginaAtual,
+            proximaPagina,
+            paginaAnterior
+        }
+        //Depois retorno o json com os alunos e as informações de paginação
+        return res.json({alunos, meta})
     }
     //Criei o endpoint para mostrar os detalhes de um só aluno, para usar no fronten
     async mostrar(req, res) {

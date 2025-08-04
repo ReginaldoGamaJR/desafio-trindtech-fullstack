@@ -5,9 +5,22 @@ Aqui é onde, será feita a parte de CRUD
 class CursoControlador {
   //O metodo store, como o próprio nome já demonstra, criei na intenção de guardar, de criar novos cursos no banco de dados
   async store(req, res) {
+    const { nome, descricao } = req.body;
+    //Ao documentar API percebi, que não estava tratando o caso do nome já existir
+    if (nome) {
+        const nomeExistente = await Curso.findOne({
+            where: {
+                nome,
+            },
+        });
+        if (nomeExistente) {
+            return res.status(400).json({ error: 'Curso já registrado' });
+        }
+    }
     //Pronto, agora vou criar o curso, utilizando o nome e a descrição que eu acabei de pegar do req
     const curso = await Curso.create(req.body);
     //Vou retornar o feedback positivo
+
     return res.status(201).json(curso);
   }
   //Agora chegamos na parte de Read do CRUD, o método index, ele vai servir para lermos todos os Cursos cadastrados

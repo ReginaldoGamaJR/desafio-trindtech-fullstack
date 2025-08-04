@@ -134,6 +134,8 @@ function AlunoDetalhes() {
       }
       //Se der tudo certo sobe um alert de Sucesso
       alert("Dados do aluno e cursos atualizados com sucesso!");
+      // Após salvar com sucesso
+      window.location.reload();
     } catch (error) {
       //Se não, ele vai cair no catch e vai mostrar um alert de erro
       alert("Erro ao salvar dados do aluno ou cursos.");
@@ -315,7 +317,7 @@ function AlunoDetalhes() {
                 }}
               >
                 {/* Aqui eu estou usando o option para selecionar o curso que o aluno vai estar se matriculando*/}
-                <option value="">Selecione...</option>
+                <option value="">Selecione um curso</option>
                 {curso.cursoId && !cursosDisponiveis.some(c => c.id === curso.cursoId) && (todosCursos || []).find(c => c.id === curso.cursoId) && (
                   <option value={curso.cursoId}>
                     {(todosCursos || []).find(c => c.id === curso.cursoId)?.nome}
@@ -334,6 +336,9 @@ function AlunoDetalhes() {
                 onChange={e => {
                   const novos = [...cursosAluno];
                   novos[idx].status = e.target.value;
+                  if (e.target.value === "em andamento") {
+                    novos[idx].data_conclusao = null;
+                  }
                   setCursosAluno(novos);
                 }}
               >
@@ -343,9 +348,11 @@ function AlunoDetalhes() {
                 <option value="encerrado">Encerrado</option>
               </select>
             </div>
-
-            <div className="col-md-4 d-flex align-items-center justify-content-between">
-              <label>Data de conclusão</label>
+            
+          {(curso.status === "concluido" || curso.status === "trancado" || curso.status === "encerrado") && (
+            <div className="col-md-4   ">
+              <label>Data</label>
+              <div className="d-flex align-items-center gap-2">
               <input
                 type="date"
                 className="form-control"
@@ -358,9 +365,9 @@ function AlunoDetalhes() {
               />
               <i className="bi bi-trash" style={{ color: "#EA394E", fontSize: 20, cursor: "pointer" }} onClick={() => { if (window.confirm("Tem certeza que deseja deletar esse curso?")) handleRemoverCurso(idx, curso.cursoId) }}></i>
             </div>
+            </div>
 
-
-          </div>
+          )}</div>
         ))}
         <div className="row mb-3">
           <div className="col-md-12 d-flex justify-content-end">

@@ -14,10 +14,10 @@ import api from "../services/api";
       await api.delete(`/alunos/${id}`);
     } 
     //Essa função vai utilizar o endpoint GET(index) de todos os alunos
-    export async function buscarTodosAlunos() {
-        const response = await api.get('/alunos')
-        return response.data;
-    }
+    export async function buscarTodosAlunos(pagina = 1, busca = "") {
+    const response = await api.get(`/alunos?pagina=${pagina}&busca=${busca}`);
+    return response.data;
+}
     //Essa função aqui é para criar(store) um aluno 
     export async function criarAluno(aluno) {
       const response = await api.post('/alunos', aluno);

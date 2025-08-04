@@ -49,3 +49,48 @@ export function formatarCep(valor) {
     }
     return '';
   }
+//A seguinte função vai ser para fazer o diferencial de paginação
+export function gerarPaginas(paginaAtual, totalPaginas) {
+  //Como parâmetros preciso apenas da página atual e o total de páginas
+  //Vou criar um array vazio, que vai ser a paginação
+    const paginas = [];
+    //Já vou puxar a primeira página, pois não importa a quantidade, ela sempre vai estar
+    paginas.push(1);
+    //Agora vou usar alguns Ifs e elses para fazer com que seja dinâmico, e dependendo da página atual, eu vou mostrar as páginas que eu quero
+    if (totalPaginas < 8) {
+      //No caso se tivermos 7 páginas vou mostrar todas elas
+        for (let i = 2; i <= totalPaginas; i++) {
+            paginas.push(i);
+        };
+    } else {
+      /*
+      Se não tivermos 7 páginas, e a página atual estiver no início, entre 0 e 5
+      eu vou mostar as páginas 1,2,3,4,5 e depois os ... e no final a última página que no caso é o total
+      */
+      if (paginaAtual < 5) {
+        for (let i = 2; i <= 5; i++){
+          paginas.push(i);
+        };
+        paginas.push("...");
+        paginas.push(totalPaginas)
+      }
+      //Agora se estiver no meio, vou mostar a primeira, os ... depois uma página antes, a atual e uma página depois, os ... e no final a última página
+      else if (paginaAtual > 4 && paginaAtual <= totalPaginas - 3) {
+        paginas.push("...");
+        for (let i = paginaAtual - 1; i <= paginaAtual + 1; i++){
+          paginas.push(i);
+        }
+        paginas.push("...");
+        paginas.push(totalPaginas);
+      }
+      //Por fim, se estiver no final, vou mostar a primeira, os ... e depois as 4 últimas páginas
+      else if (paginaAtual > totalPaginas - 3) {
+        paginas.push("...");
+        for (let i = totalPaginas - 3; i <= totalPaginas; i++){
+          paginas.push(i);
+        }
+      }
+    }
+    //Por fim, retorno o array com o formato da paginação
+    return paginas;
+}

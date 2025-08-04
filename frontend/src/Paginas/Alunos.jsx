@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { buscarTodosAlunos } from "../funcoes/AlunoAPI";
+import { gerarPaginas } from "../funcoes/utils";
 /*
 Eu utilizei a tecnica de componentização para facilitar e ficar mais organizado
 Aqui é a parte onde cuida dos alunos, onde eu busco os alunos no meu backend e os cursos que eles estão cursando
@@ -11,9 +13,11 @@ function Alunos() {
   const [busca, setBusca] = useState("");
   const [cursosPorAluno, setCursosPorAluno] = useState({});
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const alunosPorPagina = 10;
+  const [totalPaginas, setTotalPaginas] = useState(1);
   const navigate = useNavigate();
-  const [ordenarData, setOrdenarData] = useState(false);  
+  const [ordenarData, setOrdenarData] = useState(false); 
+  const [totalAlunos, setTotalAlunos] = useState(0);
+
   useEffect(() => {
     async function fetchAlunos() {
       //Aqui é onde eu vou buscar os alunos no meu backend
@@ -22,13 +26,15 @@ function Alunos() {
         const token = localStorage.getItem("token");
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         //Após pegar o token, eu uso um get para pegar alunos, e jogar eles dentro do response
-        const response = await api.get("/alunos");
+        const response = await buscarTodosAlunos(paginaAtual, busca);
         //Quando eu peguei os alunos, eu jogo eles dentro do setAlunos, que é a única função que é capaz de alterar o estado de alunos
-        setAlunos(response.data);
+        setAlunos(response.alunos);
+        setTotalPaginas(response.meta.totalPaginas);
+        setTotalAlunos(response.meta.totalAlunos);
 
         // forEach, como o nome já diz, para cada aluno, eu vou buscar os cursos que ele está fazendo
         //Esses cursos eu vou encontrar dentro da tabela relacional, que é a tabela que relaciona alunos e cursos
-        response.data.forEach(async (aluno) => {
+        response.alunos.forEach(async (aluno) => {
           //O req dela tem que ser feito dessa forma, com o aluno.id
           const cursosResp = await api.get(`/alunos/${aluno.id}/cursos`);
           //Após pegar os cursos, eu jogo eles dentro do setCursosPorAluno, que é a única função que é capaz de alterar o estado de cursosPorAluno
@@ -49,7 +55,7 @@ function Alunos() {
     //Aqui eu vou chamar a função que acabei de criar
     //o useEffect vai ser chamado só uma vez, quando a página for carregada
     fetchAlunos();
-  }, []);
+  }, [paginaAtual, busca]);
   //Aqui eu só vou ordernar eles mesmo, preparar essa função para funcionar no onclick das setinhas
     const alunosOrdenados = [...alunos].sort((a, b) => {
     if (ordenarData) {
@@ -58,19 +64,6 @@ function Alunos() {
       return new Date(a.createdAt) - new Date(b.createdAt);
     }
   });
-  //Aluno filtrados, vão ser os alunos que eu vou mostrar na tabela
-  const alunosFiltrados = alunosOrdenados.filter(aluno =>
-    aluno.nome.toLowerCase().includes(busca.toLowerCase())
-  );
-  //esse ultimo aluno, é o ultimo aluno que eu vou mostar na tabela dependendo da pagina que eu estou
-  const indiceUltimoAluno = paginaAtual * alunosPorPagina;
-  //Já que já achei o último, basta pegar ele e diminuir por 10, que é o numero de alunos por página
-  const indicePrimeiroAluno = indiceUltimoAluno - alunosPorPagina;
-  //Aqui eu vou escolher os alunos que vou mostrar em determinada página, pois basta apenas pegar o indice entre o primeiro e o ultimo daquela página
-  const alunosPagina = alunosFiltrados.slice(indicePrimeiroAluno, indiceUltimoAluno);
-  //Total de página é literalmente só dividir o numero de alunos por 10, e sempre arredondando para cima, pois podemos ter uma página com menos de 10, mas nenhuma com mais de 10
-  const totalPaginas = Math.ceil(alunosFiltrados.length / alunosPorPagina);
-
   return (
     //Aqui, é o que vai aparecer na tela para a pessoa ver
     <div className="container">
@@ -144,7 +137,7 @@ function Alunos() {
           <tbody>
             {/* Agora vou utilizar um map, para pegar de cada aluno da página, o atributo que eu quero, no caso quero o 
             createdAt, nome, uf para isso estou usando o aluno.id como chave, e também na data, tive que utilizar toLocaleDateString pt-br para formatar*/}
-            {alunosPagina.map(aluno => (
+            {alunos.map(aluno => (
               <tr key={aluno.id}>
                 <td className="DataCadastro">{new Date(aluno.createdAt).toLocaleDateString('pt-BR')}</td>
                 <td style={{cursor: "pointer"}} className="NomeAluno text-start " onClick={() => navigate(`/alunos/${aluno.id}`) }>{aluno.nome}</td>
@@ -171,15 +164,21 @@ function Alunos() {
       <nav >
         <ul className="pagination justify-content-center">
           <li className={`page-item ${paginaAtual === 1 ? "disabled" : ""}`}>
-            <button className="page-link bg-white text-secondary borderless" onClick={() => setPaginaAtual(paginaAtual - 1)}> <i className="bi bi-arrow-left"></i> Anterior</button>
+            <button className="page-link bg-white text-secondary borderless" onClick={() => setPaginaAtual(paginaAtual - 1)}> 
+              <i className="bi bi-arrow-left"></i> Anterior</button>
           </li>
-          {Array.from({ length: totalPaginas }, (_, i) => (
-            <li key={i} className={`page-item ${paginaAtual === i + 1 ? "active" : ""}`}>
-              <button className="page-link" onClick={() => setPaginaAtual(i + 1)}>{i + 1}</button>
+          {gerarPaginas(paginaAtual, totalPaginas).map((pagina, index) => (
+            <li key={index} className={`page-item ${paginaAtual === pagina ? "active" : ""}`}>
+              {pagina === '...' ? (
+          <span className="page-link disabled">...</span>
+        ) : (
+          <button className="page-link" onClick={() => setPaginaAtual(pagina)}>{pagina}</button>
+        )}
             </li>
           ))}
           <li className={`page-item  ${paginaAtual === totalPaginas ? "disabled" : ""}`}>
-            <button className="page-link bg-white text-secondary " onClick={() => setPaginaAtual(paginaAtual + 1)}>Próximo <i className="bi bi-arrow-right"> </i></button>
+            <button className="page-link bg-white text-secondary " onClick={() => setPaginaAtual(paginaAtual + 1)}>Próximo
+               <i className="bi bi-arrow-right"> </i></button>
           </li>
         </ul>
       </nav>

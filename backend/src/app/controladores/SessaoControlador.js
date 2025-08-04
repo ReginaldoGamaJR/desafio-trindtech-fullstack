@@ -12,6 +12,9 @@ class SessaoControlador {
                 email,
             },
         });
+        if (!usuario) {
+            return res.status(401).json({ error: 'Email não encontrado.' });
+        }
         //Essa função eu defini ela no modelo de usuário
         if (!(await usuario.checkPassword(password))) {
       return res.status(401).json({ error: 'Senha incorreta.' });
