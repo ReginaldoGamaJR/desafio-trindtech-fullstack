@@ -363,7 +363,7 @@ function AlunoDetalhes() {
                   setCursosAluno(novos);
                 }}
               />
-              <i className="bi bi-trash" style={{ color: "#EA394E", fontSize: 20, cursor: "pointer" }} onClick={() => { if (window.confirm("Tem certeza que deseja deletar esse curso?")) handleRemoverCurso(idx, curso.cursoId) }}></i>
+              <i className="bi bi-trash " style={{ color: "#EA394E", fontSize: 20, cursor: "pointer"}} onClick={() => { if (window.confirm("Tem certeza que deseja deletar esse curso?")) handleRemoverCurso(idx, curso.cursoId) }}></i>
             </div>
             </div>
 

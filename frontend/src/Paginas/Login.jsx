@@ -33,7 +33,7 @@ function Login() {
 
   return (
     //Aqui, assim como na de alunos é o que vai aparecer na tela
-    <div className="container d-flex flex-column align-items-center justify-content-center " style={{ minHeight: "80vh" }}>
+    <div className="container d-flex flex-column align-items-center justify-content-center" style={{ minHeight: "80vh" }}>
       {/* Aqui é o card, onde vai aparecer o login */}
       <div className="card p-4 quadradoDoLogin" style={{ maxWidth: 400, width: "100%" }}>
         <h2 className="mb-4 text-center">Login</h2>
