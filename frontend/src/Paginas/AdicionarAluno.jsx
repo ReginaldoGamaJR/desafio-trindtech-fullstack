@@ -50,7 +50,7 @@ function AdicionarAluno() {
   }
   useEffect(() => {
     async function buscarEnderecoEffect() {
-      if (cep.length === 9) {
+      if (cep.length === 8) {
         try {
           const data = await buscarEndereco(cep);
           if (!data.erro) {

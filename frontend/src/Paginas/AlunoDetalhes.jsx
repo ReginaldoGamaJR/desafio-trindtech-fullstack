@@ -145,7 +145,7 @@ function AlunoDetalhes() {
   useEffect(() => {
     //Essa aqui é a API do CEP, ela é uma API pública, e eu estou usando ela para buscar o endereço do aluno
     async function buscarEnderecoEffect() {
-      if (cep.length === 9) {
+      if (cep.length === 8) {
         //Se o CEP tiver 8 letras ele vai entrar no try
         try {
           //Aqui eu vou fazer um fetch para a API do CEP

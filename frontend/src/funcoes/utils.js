@@ -41,7 +41,7 @@ export function formatarCpf(valor) {
 //Essa função formata o CEP para ficar no estilo xx.xxx-xxx
 export function formatarCep(valor) {
     valor = valor.replace(/\D/g, '');
-    if (valor.length > 8) valor = valor.slice(0,8);
+    if (valor.length > 8)  valor = valor.slice(0,8);
     if (valor.length > 5) {
       return `${valor.slice(0, 5)}-${valor.slice(5)}`;
     } else if (valor.length > 0) {

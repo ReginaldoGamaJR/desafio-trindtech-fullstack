@@ -137,7 +137,7 @@ function Alunos() {
           <tbody>
             {/* Agora vou utilizar um map, para pegar de cada aluno da página, o atributo que eu quero, no caso quero o 
             createdAt, nome, uf para isso estou usando o aluno.id como chave, e também na data, tive que utilizar toLocaleDateString pt-br para formatar*/}
-            {alunos.map(aluno => (
+            {alunosOrdenados.map(aluno => (
               <tr key={aluno.id}>
                 <td className="DataCadastro">{new Date(aluno.createdAt).toLocaleDateString('pt-BR')}</td>
                 <td style={{cursor: "pointer"}} className="NomeAluno text-start " onClick={() => navigate(`/alunos/${aluno.id}`) }>{aluno.nome}</td>
