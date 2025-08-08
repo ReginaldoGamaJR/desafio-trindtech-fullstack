@@ -11,7 +11,7 @@ function AdicionarAluno() {
   const [nome, setNome] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [cpf, setCpf] = useState("");
-  const [genero, setGenero] = useState("");
+  const [genero, setGenero] = useState("Masculino");
   const [email, setEmail] = useState("");
   const [cep, setCep] = useState("");
   const [celular, setCelular] = useState("");
